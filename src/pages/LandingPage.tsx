@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
 
-
 function LandingPage() {
   const [films, setFilms] = useState<any[]>([]);
   const [actors, setActors] = useState<any[]>([]);
   const [selectedFilm, setSelectedFilm] = useState<any | null>(null);
   const [selectedActor, setSelectedActor] = useState<any | null>(null);
   const [actorTopFilms, setActorTopFilms] = useState<any[]>([]);
-  
 
   useEffect(() => {
     fetch("http://localhost:4000/api/landing/top-films")
@@ -39,77 +37,148 @@ function LandingPage() {
   };
 
   return (
-    <div className="container">
-      <h1 className="page-title"> Welcome to Sakila Rentals 🎬 </h1>
+    <div className="container py-5">
+      <div className="text-center mb-5">
+        <h1 className="display-4 fw-bold mb-3" style={{ color: '#fff4e6' }}>
+          Welcome to Sakila Rentals
+        </h1>
+        <p className="lead fs-4" style={{ color: '#be9b7b' }}>
+          Discover your next cinematic adventure in our curated collection
+        </p>
+      </div>
 
-      {/* Top Films */}
-      <h2 className="section-title">Top 5 Films</h2>
-<div className="horizontal-list">
-  {films.map((f) => (
-    <div key={f.film_id} className="film-card">
-      <h3>{f.title}</h3>
-      <p>{f.category}</p>
-      <button className="details" onClick={() => loadFilmDetails(f.film_id)}>
-        Details
-      </button>
-    </div>
-  ))}
-</div>
+      <div className="row mb-5">
+        <div className="col-12">
+          <h2 className="text-center mb-4 display-5" style={{ color: '#fff4e6' }}>
+            Top 5 Films
+          </h2>
+          <div className="row g-4 justify-content-center">
+            {films.map((film) => (
+              <div key={film.film_id} className="col-md-6 col-lg-4 col-xl">
+                <div 
+                  className="card h-100 shadow border-0"
+                  style={{ backgroundColor: '#fff4e6' }}
+                >
+                  <div className="card-body text-center d-flex flex-column">
+                    <h5 className="card-title text-dark mb-3">{film.title}</h5>
+                    <span 
+                      className="badge mb-3 fs-6"
+                      style={{ backgroundColor: '#854442', color: 'white' }}
+                    >
+                      {film.category}
+                    </span>
+                    <p className="text-muted small flex-grow-1">
+                      {film.rental_count} rentals
+                    </p>
+                    <button 
+                      className="btn mt-auto fw-bold"
+                      style={{ backgroundColor: '#be9b7b', color: '#3c2f2f' }}
+                      onClick={() => loadFilmDetails(film.film_id)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-<h2 className="section-title">Top 5 Actors</h2>
-<div className="horizontal-list">
-  {actors.map((a) => (
-    <div key={a.actor_id} className="film-card">
-      <h3>{a.first_name} {a.last_name}</h3>
-      <button className="details" onClick={() => loadActorDetails(a.actor_id)}>
-        Details
-      </button>
-    </div>
-  ))}
-</div>
+      <div className="row">
+        <div className="col-12">
+          <h2 className="text-center mb-4 display-5" style={{ color: '#fff4e6' }}>
+            Top 5 Actors
+          </h2>
+          <div className="row g-4 justify-content-center">
+            {actors.map((actor) => (
+              <div key={actor.actor_id} className="col-md-6 col-lg-4 col-xl">
+                <div 
+                  className="card h-100 shadow border-0"
+                  style={{ backgroundColor: '#fff4e6' }}
+                >
+                  <div className="card-body text-center d-flex flex-column">
+                    <h5 className="card-title text-dark mb-3">
+                      {actor.first_name} {actor.last_name}
+                    </h5>
+                    <p className="text-muted small flex-grow-1">
+                      {actor.films_in_store} films in store
+                    </p>
+                    <button 
+                      className="btn mt-auto fw-bold border-2"
+                      style={{ 
+                        backgroundColor: 'transparent', 
+                        color: '#854442', 
+                        borderColor: '#854442' 
+                      }}
+                      onClick={() => loadActorDetails(actor.actor_id)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-
-      {/* Film Modal */}
       <Modal isOpen={!!selectedFilm} onClose={() => setSelectedFilm(null)}>
         {selectedFilm && (
-          <>
-            <h3>{selectedFilm.title}</h3>
-            <p>{selectedFilm.description}</p>
-            <p>
-              <strong>Year:</strong> {selectedFilm.release_year}
-            </p>
-            <p>
-              <strong>Category:</strong> {selectedFilm.category}
-            </p>
-            <p>
-              <strong>Rating:</strong> {selectedFilm.rating}
-            </p>
-          </>
+          <div>
+            <h3 className="text-dark mb-4">{selectedFilm.title}</h3>
+            <p className="text-muted mb-3">{selectedFilm.description}</p>
+            <div className="row mt-3">
+              <div className="col-md-6 mb-2">
+                <strong style={{ color: '#854442' }}>Year:</strong> {selectedFilm.release_year}
+              </div>
+              <div className="col-md-6 mb-2">
+                <strong style={{ color: '#854442' }}>Category:</strong> {selectedFilm.category}
+              </div>
+              <div className="col-md-6 mb-2">
+                <strong style={{ color: '#854442' }}>Rating:</strong> {selectedFilm.rating}
+              </div>
+              <div className="col-md-6 mb-2">
+                <strong style={{ color: '#854442' }}>Length:</strong> {selectedFilm.length} min
+              </div>
+            </div>
+          </div>
         )}
       </Modal>
 
-      {/* Actor Modal */}
       <Modal isOpen={!!selectedActor} onClose={() => setSelectedActor(null)}>
-  {selectedActor && (
-    <>
-      <h3>
-        {selectedActor.first_name} {selectedActor.last_name}
-      </h3>
-      <p><strong>Actor ID:</strong> {selectedActor.actor_id}</p>
-      <p><strong>Total Films:</strong> {selectedActor.total_films}</p>
-
-      <h4>🎬 Top 5 Rented Films</h4>
-      <ul>
-        {actorTopFilms.map((f) => (
-          <li key={f.film_id}>
-            {f.title} ({f.rental_count} rentals)
-          </li>
-        ))}
-      </ul>
-    </>
-  )}
-</Modal>
-
+        {selectedActor && (
+          <div>
+            <h3 className="text-dark mb-3">
+              {selectedActor.first_name} {selectedActor.last_name}
+            </h3>
+            <p className="text-muted mb-4">
+              <strong style={{ color: '#854442' }}>Actor ID:</strong> {selectedActor.actor_id}
+            </p>
+            
+            <h5 className="text-dark mb-3">Top Rented Films</h5>
+            <div className="list-group">
+              {actorTopFilms.map((film) => (
+                <div 
+                  key={film.film_id} 
+                  className="list-group-item"
+                  style={{ backgroundColor: '#fff4e6', borderColor: '#be9b7b' }}
+                >
+                  <div className="d-flex justify-content-between align-items-center">
+                    <span className="fw-medium text-dark">{film.title}</span>
+                    <span 
+                      className="badge"
+                      style={{ backgroundColor: '#854442', color: 'white' }}
+                    >
+                      {film.rental_count} rentals
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

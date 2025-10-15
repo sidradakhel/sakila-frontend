@@ -75,21 +75,15 @@ function CustomersPage() {
 
     const handleDelete = async (id: number) => {
         if (!window.confirm("🗑️ Delete this customer?")) return;
-    
+
         try {
             const res = await fetch(`http://localhost:4000/api/customers/${id}`, {
                 method: "DELETE",
             });
-    
+
             const data = await res.json();
-            
-            if (!res.ok) {
-                alert(`❌ ${data.error || "Failed to delete customer"}`);
-                return;
-            }
-    
             alert(data.message || "Customer deleted!");
-    
+
             // Force a complete reload of the current page with search query
             await loadCustomers(page, query);
             
@@ -152,7 +146,7 @@ function CustomersPage() {
             <div className="table-responsive">
                 <table className="table table-hover table-borderless">
                     <thead>
-                        <tr style={{ backgroundColor: '#854442', color: 'white' }}>
+                        <tr style={{ backgroundColor: '#fff4e6', color: '#3c2f2f' }}>
                             <th className="ps-3">ID</th>
                             <th>Name</th>
                             <th>Email</th>
@@ -243,7 +237,6 @@ function CustomersPage() {
                 </div>
             </div>
 
-            {/* Keep your existing modals - they'll work with the color scheme */}
             {/* Details Modal */}
             <Modal isOpen={!!selectedCustomer} onClose={() => setSelectedCustomer(null)}>
                 {selectedCustomer && (
